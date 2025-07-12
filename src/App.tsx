@@ -788,8 +788,7 @@ function App() {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-logo" onClick={() => setCurrentPage('home')}>
-            <img src="/2025-07-12_04.01.51-removebg-preview.png" alt="Techno Plus Logo" className="logo-img" style={{height: '40px', marginRight: language === 'ar' ? 0 : '0.5rem', marginLeft: language === 'ar' ? '0.5rem' : 0}} />
-            <span className="logo-text">{currentT.companyName}</span>
+            <img src="/2025-07-12_04.01.51-removebg-preview.png" alt="Techno Plus Logo" className="logo-img logo-img-animate" style={{height: '40px', marginRight: 0, marginLeft: 0}} />
           </div>
           <div className="nav-menu">
             <button 

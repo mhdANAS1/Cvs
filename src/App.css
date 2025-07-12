@@ -6,6 +6,15 @@
   vertical-align: middle;
 }
 
+.logo-img-animate {
+  animation: logoFadeInScale 1.2s cubic-bezier(.23,1.01,.32,1) both;
+}
+@keyframes logoFadeInScale {
+  0% { opacity: 0; transform: scale(0.7) rotate(-10deg); }
+  60% { opacity: 1; transform: scale(1.1) rotate(3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
 :root {
   --primary-color: #2196f3;
   --secondary-color: #1976d2;
