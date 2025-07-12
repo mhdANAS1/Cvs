@@ -15,22 +15,22 @@
   100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 
+/* --- UI/UX Improvements --- */
 :root {
   --primary-color: #2196f3;
   --secondary-color: #1976d2;
   --accent-color: #21cbf3;
   --text-color: #1a237e;
   --text-light: #607d8b;
-  --bg-color: #ffffff;
-  --bg-secondary: #f5f7fa;
+  --bg-color: #f7faff;
+  --bg-secondary: #e3f2fd;
   --border-color: #e3eafc;
-  --shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.08);
-  --shadow-lg: 0 10px 15px -3px rgba(33, 150, 243, 0.12);
+  --shadow: 0 4px 16px -2px rgba(33, 150, 243, 0.10);
+  --shadow-lg: 0 10px 32px -4px rgba(33, 150, 243, 0.16);
   --gradient: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
   --gradient-alt: linear-gradient(135deg, #21cbf3 0%, #1976d2 100%);
 }
 
-/* Dark mode variables */
 .dark-mode {
   --primary-color: #21cbf3;
   --secondary-color: #1976d2;
@@ -40,8 +40,8 @@
   --bg-color: #0a1929;
   --bg-secondary: #1a237e;
   --border-color: #1976d2;
-  --shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.18);
-  --shadow-lg: 0 10px 15px -3px rgba(33, 150, 243, 0.22);
+  --shadow: 0 4px 16px -2px rgba(33, 150, 243, 0.18);
+  --shadow-lg: 0 10px 32px -4px rgba(33, 150, 243, 0.22);
 }
 
 /* RTL Support */
@@ -77,9 +77,10 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Inter', 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-color);
   color: var(--text-color);
+  letter-spacing: 0.01em;
   transition: all 0.3s ease;
   direction: ltr;
 }
@@ -93,180 +94,48 @@ body[dir="rtl"] {
   font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Navigation */
-.navbar {
-  background: var(--bg-color);
-  box-shadow: var(--shadow);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.nav-logo:hover {
-  transform: scale(1.05);
-}
-
-.logo-icon {
-  font-size: 2rem;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Cairo', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   color: var(--primary-color);
 }
 
-.nav-menu {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.nav-link {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.nav-link:hover {
-  background-color: var(--bg-secondary);
-  color: var(--primary-color);
-}
-
-.nav-link.active {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.nav-controls {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.control-btn {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.2rem;
-}
-
-.control-btn:hover {
-  background-color: var(--primary-color);
-  color: white;
-  transform: scale(1.1);
-}
-
-.admin-btn {
-  background-color: #dc2626;
-  color: white;
-}
-
-.admin-btn:hover {
-  background-color: #b91c1c;
-}
-
-.logout-btn {
-  background-color: #7c3aed;
-  color: white;
-}
-
-.logout-btn:hover {
-  background-color: #6d28d9;
-}
-
-/* Main Content */
-.main-content {
-  flex: 1;
-  padding: 2rem 0;
-}
-
-/* Page Headers */
-.page-header {
-  text-align: center;
-  padding: 3rem 2rem;
+.page-header, .hero-section {
   background: var(--gradient);
-  color: white;
+  color: #fff;
+  border-radius: 2rem;
+  box-shadow: var(--shadow-lg);
   margin-bottom: 3rem;
-}
-
-.page-header h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
-.page-header p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-}
-
-/* Home Page */
-.home-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  padding: 3rem 2rem;
 }
 
 .hero-section {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 4rem 0;
-  background: var(--gradient);
-  color: white;
-  border-radius: 1rem;
-  margin-bottom: 4rem;
 }
 
 .hero-content h1 {
-  font-size: 3.5rem;
+  font-size: 3.2rem;
+  font-weight: 900;
   margin-bottom: 1rem;
-  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.02em;
 }
-
 .hero-content h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
   margin-bottom: 1rem;
-  opacity: 0.9;
+  color: #e3eafc;
 }
-
 .hero-content p {
   font-size: 1.2rem;
+  color: #e3eafc;
   margin-bottom: 2rem;
-  opacity: 0.8;
 }
 
 .hero-buttons {
@@ -1101,4 +970,58 @@ body[dir="rtl"] {
 /* Smooth transitions for theme switching */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Nav improvements */
+.navbar {
+  background: #fff;
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: 0 2px 12px rgba(33,150,243,0.04);
+}
+.dark-mode .navbar {
+  background: var(--bg-secondary);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+.logo-img {
+  height: 48px;
+  width: auto;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(33,150,243,0.10);
+  background: #fff;
+  padding: 0.2rem 0.5rem;
+}
+
+/* Footer improvements */
+.footer {
+  background: var(--bg-secondary);
+  border-top: 2px solid var(--border-color);
+  border-radius: 2rem 2rem 0 0;
+  box-shadow: 0 -2px 12px rgba(33,150,243,0.04);
+}
+.footer-content {
+  border-radius: 2rem 2rem 0 0;
+}
+.footer-section h3 {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .page-header, .hero-section, .features-section, .stats-section, .about-content, .contact-content, .dashboard-content {
+    border-radius: 1.2rem;
+    padding: 1.5rem 0.7rem;
+  }
+  .footer, .footer-content {
+    border-radius: 1.2rem 1.2rem 0 0;
+  }
+  .logo-img {
+    height: 36px;
+    border-radius: 0.7rem;
+  }
 }

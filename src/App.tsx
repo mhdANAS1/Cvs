@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface Project {
   id: number;
@@ -788,7 +789,7 @@ function App() {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-logo" onClick={() => setCurrentPage('home')}>
-            <img src="/2025-07-12_04.01.51-removebg-preview.png" alt="Techno Plus Logo" className="logo-img logo-img-animate" style={{height: '40px', marginRight: 0, marginLeft: 0}} />
+            <img src="/2025-07-12_04.01.51-removebg-preview.png" alt="Techno Plus Logo" className="logo-img logo-img-animate" style={{height: '48px', margin: 0}} />
           </div>
           <div className="nav-menu">
             <button 
@@ -867,14 +868,23 @@ function App() {
         </div>
       </nav>
 
-      <main className="main-content">
-        {currentPage === 'home' && renderHomePage()}
-        {currentPage === 'services' && renderServicesPage()}
-        {currentPage === 'portfolio' && renderPortfolioPage()}
-        {currentPage === 'about' && renderAboutPage()}
-        {currentPage === 'contact' && renderContactPage(formData, handleContactChange, handleContactSubmit)}
-        {currentPage === 'dashboard' && isAdmin && renderDashboard()}
-      </main>
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={currentPage}
+          className="main-content"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.5, ease: [0.23, 1.01, 0.32, 1] }}
+        >
+          {currentPage === 'home' && renderHomePage()}
+          {currentPage === 'services' && renderServicesPage()}
+          {currentPage === 'portfolio' && renderPortfolioPage()}
+          {currentPage === 'about' && renderAboutPage()}
+          {currentPage === 'contact' && renderContactPage(formData, handleContactChange, handleContactSubmit)}
+          {currentPage === 'dashboard' && isAdmin && renderDashboard()}
+        </motion.main>
+      </AnimatePresence>
 
       {showLogin && renderAdminLogin()}
 
