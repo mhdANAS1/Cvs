@@ -241,7 +241,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>📄 Professional CV Builder</h1>
+        <h1>📄 Techn Plus CVs</h1>
         <p>Create your professional CV with our comprehensive form</p>
       </header>
 

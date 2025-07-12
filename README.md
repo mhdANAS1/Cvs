@@ -1,4 +1,4 @@
-# 📄 Professional CV Builder
+# 📄 Techn Plus CVs
 
 A modern, responsive web application for creating professional CVs with a beautiful and intuitive interface.
 
