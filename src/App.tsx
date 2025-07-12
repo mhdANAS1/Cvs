@@ -18,9 +18,37 @@ interface Service {
   features: string[];
 }
 
+interface FormDataType {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  service: string;
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [activeFilter, setActiveFilter] = useState('all');
+
+  // Contact form state moved to top level
+  const [formData, setFormData] = useState<FormDataType>({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    service: ''
+  });
+
+  const handleContactChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Contact Form Data:', formData);
+    alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+    setFormData({ name: '', email: '', phone: '', message: '', service: '' });
+  };
 
   const services: Service[] = [
     {
@@ -332,127 +360,108 @@ function App() {
     </div>
   );
 
-  const renderContactPage = () => {
-    const [formData, setFormData] = useState({
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-      service: ''
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      console.log('Contact Form Data:', formData);
-      alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
-      setFormData({ name: '', email: '', phone: '', message: '', service: '' });
-    };
-
-    const handleChange = (field: string, value: string) => {
-      setFormData(prev => ({ ...prev, [field]: value }));
-    };
-
-    return (
-      <div className="contact-page">
-        <section className="page-header">
-          <h1>تواصل معنا</h1>
-          <p>نحن هنا لمساعدتك في تحقيق مشروعك</p>
-        </section>
-
-        <section className="contact-content">
-          <div className="contact-info">
-            <h2>معلومات التواصل</h2>
-            <div className="contact-item">
-              <div className="contact-icon">📧</div>
-              <div>
-                <h3>البريد الإلكتروني</h3>
-                <p>info@technoplus.com</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">📱</div>
-              <div>
-                <h3>واتساب</h3>
-                <p>+966 50 123 4567</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">📍</div>
-              <div>
-                <h3>العنوان</h3>
-                <p>الرياض، المملكة العربية السعودية</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">⏰</div>
-              <div>
-                <h3>ساعات العمل</h3>
-                <p>الأحد - الخميس: 9:00 ص - 6:00 م</p>
-              </div>
+  const renderContactPage = (
+    formData: FormDataType,
+    handleChange: (field: string, value: string) => void,
+    handleSubmit: (e: React.FormEvent) => void
+  ) => (
+    <div className="contact-page">
+      <section className="page-header">
+        <h1>تواصل معنا</h1>
+        <p>نحن هنا لمساعدتك في تحقيق مشروعك</p>
+      </section>
+      <section className="contact-content">
+        <div className="contact-info">
+          <h2>معلومات التواصل</h2>
+          <div className="contact-item">
+            <div className="contact-icon">📧</div>
+            <div>
+              <h3>البريد الإلكتروني</h3>
+              <p>info@technoplus.com</p>
             </div>
           </div>
-
-          <div className="contact-form">
-            <h2>أرسل لنا رسالة</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>الاسم الكامل *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>البريد الإلكتروني *</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>رقم الهاتف</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => handleChange('phone', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>الخدمة المطلوبة</label>
-                <select
-                  value={formData.service}
-                  onChange={(e) => handleChange('service', e.target.value)}
-                >
-                  <option value="">اختر الخدمة</option>
-                  <option value="website">تطوير المواقع</option>
-                  <option value="mobile">تطبيقات الموبايل</option>
-                  <option value="dashboard">لوحات التحكم</option>
-                  <option value="social">التطبيقات الاجتماعية</option>
-                  <option value="business">حلول الأعمال</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>الرسالة *</label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => handleChange('message', e.target.value)}
-                  rows={5}
-                  required
-                />
-              </div>
-              <button type="submit" className="submit-btn">
-                إرسال الرسالة
-              </button>
-            </form>
+          <div className="contact-item">
+            <div className="contact-icon">📱</div>
+            <div>
+              <h3>واتساب</h3>
+              <p>+966 50 123 4567</p>
+            </div>
           </div>
-        </section>
-      </div>
-    );
-  };
+          <div className="contact-item">
+            <div className="contact-icon">📍</div>
+            <div>
+              <h3>العنوان</h3>
+              <p>الرياض، المملكة العربية السعودية</p>
+            </div>
+          </div>
+          <div className="contact-item">
+            <div className="contact-icon">⏰</div>
+            <div>
+              <h3>ساعات العمل</h3>
+              <p>الأحد - الخميس: 9:00 ص - 6:00 م</p>
+            </div>
+          </div>
+        </div>
+        <div className="contact-form">
+          <h2>أرسل لنا رسالة</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>الاسم الكامل *</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>البريد الإلكتروني *</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>رقم الهاتف</label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>الخدمة المطلوبة</label>
+              <select
+                value={formData.service}
+                onChange={(e) => handleChange('service', e.target.value)}
+              >
+                <option value="">اختر الخدمة</option>
+                <option value="website">تطوير المواقع</option>
+                <option value="mobile">تطبيقات الموبايل</option>
+                <option value="dashboard">لوحات التحكم</option>
+                <option value="social">التطبيقات الاجتماعية</option>
+                <option value="business">حلول الأعمال</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>الرسالة *</label>
+              <textarea
+                value={formData.message}
+                onChange={(e) => handleChange('message', e.target.value)}
+                rows={5}
+                required
+              />
+            </div>
+            <button type="submit" className="submit-btn">
+              إرسال الرسالة
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  );
 
   return (
     <div className="App">
@@ -496,15 +505,13 @@ function App() {
           </div>
         </div>
       </nav>
-
       <main className="main-content">
         {currentPage === 'home' && renderHomePage()}
         {currentPage === 'services' && renderServicesPage()}
         {currentPage === 'portfolio' && renderPortfolioPage()}
         {currentPage === 'about' && renderAboutPage()}
-        {currentPage === 'contact' && renderContactPage()}
+        {currentPage === 'contact' && renderContactPage(formData, handleContactChange, handleContactSubmit)}
       </main>
-
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
