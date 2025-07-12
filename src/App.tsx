@@ -1,633 +1,537 @@
 import React, { useState } from 'react';
 import './App.css';
 
-interface CVData {
-  personalInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
-    linkedin: string;
-    summary: string;
-  };
-  education: Array<{
-    institution: string;
-    degree: string;
-    field: string;
-    startDate: string;
-    endDate: string;
-    gpa: string;
-  }>;
-  experience: Array<{
-    company: string;
-    position: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  }>;
-  skills: Array<{
-    category: string;
-    skills: string;
-  }>;
-  projects: Array<{
-    name: string;
-    description: string;
-    technologies: string;
-    link: string;
-  }>;
-  languages: Array<{
-    language: string;
-    proficiency: string;
-  }>;
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  technologies: string[];
+}
+
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  features: string[];
 }
 
 function App() {
-  const [cvData, setCvData] = useState<CVData>({
-    personalInfo: {
-      firstName: '',
-      lastName: '',
+  const [currentPage, setCurrentPage] = useState('home');
+  const [activeFilter, setActiveFilter] = useState('all');
+
+  const services: Service[] = [
+    {
+      id: 1,
+      title: "تطوير المواقع الإلكترونية",
+      description: "نقوم بتطوير مواقع إلكترونية حديثة ومتجاوبة تلبي احتياجات عملك",
+      icon: "🌐",
+      features: ["تصميم متجاوب", "تحسين محركات البحث", "واجهة مستخدم سهلة", "أمان عالي"]
+    },
+    {
+      id: 2,
+      title: "تطوير تطبيقات الموبايل",
+      description: "تطبيقات أندرويد و iOS عالية الجودة مع تجربة مستخدم ممتازة",
+      icon: "📱",
+      features: ["أندرويد و iOS", "تصميم عصري", "أداء عالي", "دعم فني"]
+    },
+    {
+      id: 3,
+      title: "لوحات تحكم الأعمال",
+      description: "أنظمة إدارة مخصصة لتحسين عمليات عملك وزيادة الإنتاجية",
+      icon: "📊",
+      features: ["إدارة البيانات", "تقارير مفصلة", "واجهة سهلة", "تكامل مع الأنظمة"]
+    },
+    {
+      id: 4,
+      title: "تطبيقات التواصل الاجتماعي",
+      description: "تطبيقات تواصل اجتماعي مبتكرة مع ميزات متقدمة",
+      icon: "💬",
+      features: ["رسائل فورية", "مشاركة الوسائط", "إشعارات ذكية", "خصوصية عالية"]
+    },
+    {
+      id: 5,
+      title: "حلول برمجية للأعمال",
+      description: "أنظمة ERP و CRM مخصصة لتحسين إدارة عملك",
+      icon: "🏢",
+      features: ["إدارة الموارد", "إدارة العملاء", "تحليل البيانات", "تقارير شاملة"]
+    }
+  ];
+
+  const projects: Project[] = [
+    {
+      id: 1,
+      title: "متجر إلكتروني متكامل",
+      description: "منصة تسوق إلكتروني مع نظام دفع وإدارة مخزون",
+      image: "🛒",
+      category: "website",
+      technologies: ["React", "Node.js", "MongoDB", "Stripe"]
+    },
+    {
+      id: 2,
+      title: "تطبيق توصيل الطعام",
+      description: "تطبيق موبايل لتوصيل الطعام مع نظام تتبع GPS",
+      image: "🍕",
+      category: "mobile",
+      technologies: ["React Native", "Firebase", "Google Maps", "Push Notifications"]
+    },
+    {
+      id: 3,
+      title: "نظام إدارة المستشفى",
+      description: "لوحة تحكم شاملة لإدارة المرضى والمواعيد",
+      image: "🏥",
+      category: "dashboard",
+      technologies: ["Vue.js", "Laravel", "MySQL", "Chart.js"]
+    },
+    {
+      id: 4,
+      title: "منصة تعليمية",
+      description: "موقع تعليمي تفاعلي مع نظام إدارة الدورات",
+      image: "📚",
+      category: "website",
+      technologies: ["Next.js", "PostgreSQL", "AWS", "Video Streaming"]
+    },
+    {
+      id: 5,
+      title: "تطبيق اجتماعي",
+      description: "منصة تواصل اجتماعي مع ميزات مشاركة الصور والفيديو",
+      image: "📸",
+      category: "social",
+      technologies: ["Flutter", "Firebase", "Cloud Storage", "Real-time Chat"]
+    },
+    {
+      id: 6,
+      title: "نظام إدارة المخزون",
+      description: "حل برمجي متكامل لإدارة المخزون والمبيعات",
+      image: "📦",
+      category: "business",
+      technologies: ["Angular", "Spring Boot", "PostgreSQL", "Redis"]
+    }
+  ];
+
+  const filteredProjects = activeFilter === 'all' 
+    ? projects 
+    : projects.filter(project => project.category === activeFilter);
+
+  const renderHomePage = () => (
+    <div className="home-page">
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>تكنو بلس</h1>
+          <h2>شركة تطوير البرمجيات الحديثة</h2>
+          <p>نحول أفكارك إلى حلول رقمية مبتكرة تلبي احتياجات عملك</p>
+          <div className="hero-buttons">
+            <button onClick={() => setCurrentPage('services')} className="primary-btn">
+              خدماتنا
+            </button>
+            <button onClick={() => setCurrentPage('contact')} className="secondary-btn">
+              تواصل معنا
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="features-section">
+        <h2>لماذا تختار تكنو بلس؟</h2>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">🚀</div>
+            <h3>تطوير سريع</h3>
+            <p>نقدم حلول سريعة وفعالة تلبي احتياجاتك</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">💡</div>
+            <h3>تصميم مبتكر</h3>
+            <p>تصاميم عصرية ومبتكرة تجذب انتباه عملائك</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🛡️</div>
+            <h3>أمان عالي</h3>
+            <p>حماية شاملة لبياناتك وتطبيقاتك</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">📱</div>
+            <h3>متجاوب بالكامل</h3>
+            <p>يعمل على جميع الأجهزة والشاشات</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="stats-section">
+        <div className="stats-grid">
+          <div className="stat-item">
+            <h3>50+</h3>
+            <p>مشروع مكتمل</p>
+          </div>
+          <div className="stat-item">
+            <h3>30+</h3>
+            <p>عميل راضي</p>
+          </div>
+          <div className="stat-item">
+            <h3>5+</h3>
+            <p>سنوات خبرة</p>
+          </div>
+          <div className="stat-item">
+            <h3>24/7</h3>
+            <p>دعم فني</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+
+  const renderServicesPage = () => (
+    <div className="services-page">
+      <section className="page-header">
+        <h1>خدماتنا</h1>
+        <p>نقدم مجموعة شاملة من خدمات تطوير البرمجيات</p>
+      </section>
+
+      <section className="services-grid">
+        {services.map(service => (
+          <div key={service.id} className="service-card">
+            <div className="service-icon">{service.icon}</div>
+            <h3>{service.title}</h3>
+            <p>{service.description}</p>
+            <ul className="service-features">
+              {service.features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+            <button onClick={() => setCurrentPage('contact')} className="service-btn">
+              اطلب عرض سعر
+            </button>
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+
+  const renderPortfolioPage = () => (
+    <div className="portfolio-page">
+      <section className="page-header">
+        <h1>معرض أعمالنا</h1>
+        <p>نفخر بعرض مجموعة من مشاريعنا المنجزة</p>
+      </section>
+
+      <section className="portfolio-filters">
+        <button 
+          className={activeFilter === 'all' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('all')}
+        >
+          جميع المشاريع
+        </button>
+        <button 
+          className={activeFilter === 'website' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('website')}
+        >
+          المواقع الإلكترونية
+        </button>
+        <button 
+          className={activeFilter === 'mobile' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('mobile')}
+        >
+          تطبيقات الموبايل
+        </button>
+        <button 
+          className={activeFilter === 'dashboard' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('dashboard')}
+        >
+          لوحات التحكم
+        </button>
+        <button 
+          className={activeFilter === 'social' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('social')}
+        >
+          التطبيقات الاجتماعية
+        </button>
+        <button 
+          className={activeFilter === 'business' ? 'filter-btn active' : 'filter-btn'}
+          onClick={() => setActiveFilter('business')}
+        >
+          حلول الأعمال
+        </button>
+      </section>
+
+      <section className="portfolio-grid">
+        {filteredProjects.map(project => (
+          <div key={project.id} className="project-card">
+            <div className="project-image">{project.image}</div>
+            <div className="project-content">
+              <h3>{project.title}</h3>
+              <p>{project.description}</p>
+              <div className="project-technologies">
+                {project.technologies.map((tech, index) => (
+                  <span key={index} className="tech-tag">{tech}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+
+  const renderAboutPage = () => (
+    <div className="about-page">
+      <section className="page-header">
+        <h1>من نحن</h1>
+        <p>تعرف على شركة تكنو بلس ورؤيتنا للمستقبل</p>
+      </section>
+
+      <section className="about-content">
+        <div className="about-text">
+          <h2>قصتنا</h2>
+          <p>
+            تكنو بلس هي شركة تطوير برمجيات حديثة تأسست بهدف تقديم حلول رقمية مبتكرة 
+            تلبي احتياجات الشركات والأفراد. نحن نؤمن بقوة التكنولوجيا في تحويل 
+            الأفكار إلى واقع ملموس.
+          </p>
+          
+          <h2>رؤيتنا</h2>
+          <p>
+            نسعى لأن نكون الشريك الموثوق في رحلة التحول الرقمي، ونقدم حلول تقنية 
+            عالية الجودة تساعد عملاءنا على النمو والتطور في العصر الرقمي.
+          </p>
+
+          <h2>مهمتنا</h2>
+          <p>
+            تقديم خدمات تطوير برمجيات متميزة مع التركيز على الجودة والابتكار 
+            والرضا الكامل للعملاء، مع ضمان التسليم في الوقت المحدد.
+          </p>
+        </div>
+
+        <div className="team-section">
+          <h2>فريق العمل</h2>
+          <div className="team-grid">
+            <div className="team-member">
+              <div className="member-avatar">👨‍💻</div>
+              <h3>أحمد محمد</h3>
+              <p>مدير التطوير</p>
+            </div>
+            <div className="team-member">
+              <div className="member-avatar">👩‍🎨</div>
+              <h3>سارة أحمد</h3>
+              <p>مصممة واجهات المستخدم</p>
+            </div>
+            <div className="team-member">
+              <div className="member-avatar">👨‍🔧</div>
+              <h3>محمد علي</h3>
+              <p>مطور تطبيقات الموبايل</p>
+            </div>
+            <div className="team-member">
+              <div className="member-avatar">👩‍💼</div>
+              <h3>فاطمة حسن</h3>
+              <p>مديرة المشاريع</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+
+  const renderContactPage = () => {
+    const [formData, setFormData] = useState({
+      name: '',
       email: '',
       phone: '',
-      address: '',
-      linkedin: '',
-      summary: ''
-    },
-    education: [{
-      institution: '',
-      degree: '',
-      field: '',
-      startDate: '',
-      endDate: '',
-      gpa: ''
-    }],
-    experience: [{
-      company: '',
-      position: '',
-      startDate: '',
-      endDate: '',
-      description: ''
-    }],
-    skills: [{
-      category: '',
-      skills: ''
-    }],
-    projects: [{
-      name: '',
-      description: '',
-      technologies: '',
-      link: ''
-    }],
-    languages: [{
-      language: '',
-      proficiency: ''
-    }]
-  });
+      message: '',
+      service: ''
+    });
 
-  const updatePersonalInfo = (field: keyof CVData['personalInfo'], value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      personalInfo: {
-        ...prev.personalInfo,
-        [field]: value
-      }
-    }));
-  };
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      console.log('Contact Form Data:', formData);
+      alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+      setFormData({ name: '', email: '', phone: '', message: '', service: '' });
+    };
 
-  const updateEducation = (index: number, field: string, value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      education: prev.education.map((edu, i) => 
-        i === index ? { ...edu, [field]: value } : edu
-      )
-    }));
-  };
+    const handleChange = (field: string, value: string) => {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    };
 
-  const addEducation = () => {
-    setCvData(prev => ({
-      ...prev,
-      education: [...prev.education, {
-        institution: '',
-        degree: '',
-        field: '',
-        startDate: '',
-        endDate: '',
-        gpa: ''
-      }]
-    }));
-  };
+    return (
+      <div className="contact-page">
+        <section className="page-header">
+          <h1>تواصل معنا</h1>
+          <p>نحن هنا لمساعدتك في تحقيق مشروعك</p>
+        </section>
 
-  const removeEducation = (index: number) => {
-    setCvData(prev => ({
-      ...prev,
-      education: prev.education.filter((_, i) => i !== index)
-    }));
-  };
+        <section className="contact-content">
+          <div className="contact-info">
+            <h2>معلومات التواصل</h2>
+            <div className="contact-item">
+              <div className="contact-icon">📧</div>
+              <div>
+                <h3>البريد الإلكتروني</h3>
+                <p>info@technoplus.com</p>
+              </div>
+            </div>
+            <div className="contact-item">
+              <div className="contact-icon">📱</div>
+              <div>
+                <h3>واتساب</h3>
+                <p>+966 50 123 4567</p>
+              </div>
+            </div>
+            <div className="contact-item">
+              <div className="contact-icon">📍</div>
+              <div>
+                <h3>العنوان</h3>
+                <p>الرياض، المملكة العربية السعودية</p>
+              </div>
+            </div>
+            <div className="contact-item">
+              <div className="contact-icon">⏰</div>
+              <div>
+                <h3>ساعات العمل</h3>
+                <p>الأحد - الخميس: 9:00 ص - 6:00 م</p>
+              </div>
+            </div>
+          </div>
 
-  const updateExperience = (index: number, field: string, value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      experience: prev.experience.map((exp, i) => 
-        i === index ? { ...exp, [field]: value } : exp
-      )
-    }));
-  };
-
-  const addExperience = () => {
-    setCvData(prev => ({
-      ...prev,
-      experience: [...prev.experience, {
-        company: '',
-        position: '',
-        startDate: '',
-        endDate: '',
-        description: ''
-      }]
-    }));
-  };
-
-  const removeExperience = (index: number) => {
-    setCvData(prev => ({
-      ...prev,
-      experience: prev.experience.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateSkills = (index: number, field: string, value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      skills: prev.skills.map((skill, i) => 
-        i === index ? { ...skill, [field]: value } : skill
-      )
-    }));
-  };
-
-  const addSkills = () => {
-    setCvData(prev => ({
-      ...prev,
-      skills: [...prev.skills, { category: '', skills: '' }]
-    }));
-  };
-
-  const removeSkills = (index: number) => {
-    setCvData(prev => ({
-      ...prev,
-      skills: prev.skills.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateProjects = (index: number, field: string, value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      projects: prev.projects.map((project, i) => 
-        i === index ? { ...project, [field]: value } : project
-      )
-    }));
-  };
-
-  const addProject = () => {
-    setCvData(prev => ({
-      ...prev,
-      projects: [...prev.projects, {
-        name: '',
-        description: '',
-        technologies: '',
-        link: ''
-      }]
-    }));
-  };
-
-  const removeProject = (index: number) => {
-    setCvData(prev => ({
-      ...prev,
-      projects: prev.projects.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateLanguages = (index: number, field: string, value: string) => {
-    setCvData(prev => ({
-      ...prev,
-      languages: prev.languages.map((lang, i) => 
-        i === index ? { ...lang, [field]: value } : lang
-      )
-    }));
-  };
-
-  const addLanguage = () => {
-    setCvData(prev => ({
-      ...prev,
-      languages: [...prev.languages, { language: '', proficiency: '' }]
-    }));
-  };
-
-  const removeLanguage = (index: number) => {
-    setCvData(prev => ({
-      ...prev,
-      languages: prev.languages.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('CV Data:', cvData);
-    alert('CV form submitted! Check console for data.');
-  };
-
-  const generatePDF = () => {
-    // This would integrate with a PDF generation library
-    alert('PDF generation feature would be implemented here!');
+          <div className="contact-form">
+            <h2>أرسل لنا رسالة</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>الاسم الكامل *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>البريد الإلكتروني *</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>رقم الهاتف</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleChange('phone', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>الخدمة المطلوبة</label>
+                <select
+                  value={formData.service}
+                  onChange={(e) => handleChange('service', e.target.value)}
+                >
+                  <option value="">اختر الخدمة</option>
+                  <option value="website">تطوير المواقع</option>
+                  <option value="mobile">تطبيقات الموبايل</option>
+                  <option value="dashboard">لوحات التحكم</option>
+                  <option value="social">التطبيقات الاجتماعية</option>
+                  <option value="business">حلول الأعمال</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>الرسالة *</label>
+                <textarea
+                  value={formData.message}
+                  onChange={(e) => handleChange('message', e.target.value)}
+                  rows={5}
+                  required
+                />
+              </div>
+              <button type="submit" className="submit-btn">
+                إرسال الرسالة
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+    );
   };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>📄 Techn Plus CVs</h1>
-        <p>Create your professional CV with our comprehensive form</p>
-      </header>
-
-      <main className="App-main">
-        <form onSubmit={handleSubmit} className="cv-form">
-          {/* Personal Information */}
-          <section className="form-section">
-            <h2>👤 Personal Information</h2>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>First Name *</label>
-                <input
-                  type="text"
-                  value={cvData.personalInfo.firstName}
-                  onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Last Name *</label>
-                <input
-                  type="text"
-                  value={cvData.personalInfo.lastName}
-                  onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Email *</label>
-                <input
-                  type="email"
-                  value={cvData.personalInfo.email}
-                  onChange={(e) => updatePersonalInfo('email', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Phone *</label>
-                <input
-                  type="tel"
-                  value={cvData.personalInfo.phone}
-                  onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>Address</label>
-                <input
-                  type="text"
-                  value={cvData.personalInfo.address}
-                  onChange={(e) => updatePersonalInfo('address', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>LinkedIn</label>
-                <input
-                  type="url"
-                  value={cvData.personalInfo.linkedin}
-                  onChange={(e) => updatePersonalInfo('linkedin', e.target.value)}
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>Professional Summary</label>
-                <textarea
-                  value={cvData.personalInfo.summary}
-                  onChange={(e) => updatePersonalInfo('summary', e.target.value)}
-                  rows={4}
-                  placeholder="Write a brief professional summary..."
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Education */}
-          <section className="form-section">
-            <h2>🎓 Education</h2>
-            {cvData.education.map((edu, index) => (
-              <div key={index} className="form-card">
-                <div className="card-header">
-                  <h3>Education #{index + 1}</h3>
-                  {cvData.education.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeEducation(index)}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Institution *</label>
-                    <input
-                      type="text"
-                      value={edu.institution}
-                      onChange={(e) => updateEducation(index, 'institution', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Degree *</label>
-                    <input
-                      type="text"
-                      value={edu.degree}
-                      onChange={(e) => updateEducation(index, 'degree', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Field of Study</label>
-                    <input
-                      type="text"
-                      value={edu.field}
-                      onChange={(e) => updateEducation(index, 'field', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Start Date</label>
-                    <input
-                      type="month"
-                      value={edu.startDate}
-                      onChange={(e) => updateEducation(index, 'startDate', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>End Date</label>
-                    <input
-                      type="month"
-                      value={edu.endDate}
-                      onChange={(e) => updateEducation(index, 'endDate', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>GPA</label>
-                    <input
-                      type="text"
-                      value={edu.gpa}
-                      onChange={(e) => updateEducation(index, 'gpa', e.target.value)}
-                      placeholder="e.g., 3.8/4.0"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addEducation} className="add-btn">
-              + Add Education
+      <nav className="navbar">
+        <div className="nav-container">
+          <div className="nav-logo" onClick={() => setCurrentPage('home')}>
+            <span className="logo-icon">🚀</span>
+            <span className="logo-text">تكنو بلس</span>
+          </div>
+          <div className="nav-menu">
+            <button 
+              className={currentPage === 'home' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setCurrentPage('home')}
+            >
+              الرئيسية
             </button>
-          </section>
-
-          {/* Work Experience */}
-          <section className="form-section">
-            <h2>💼 Work Experience</h2>
-            {cvData.experience.map((exp, index) => (
-              <div key={index} className="form-card">
-                <div className="card-header">
-                  <h3>Experience #{index + 1}</h3>
-                  {cvData.experience.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeExperience(index)}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Company *</label>
-                    <input
-                      type="text"
-                      value={exp.company}
-                      onChange={(e) => updateExperience(index, 'company', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Position *</label>
-                    <input
-                      type="text"
-                      value={exp.position}
-                      onChange={(e) => updateExperience(index, 'position', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Start Date</label>
-                    <input
-                      type="month"
-                      value={exp.startDate}
-                      onChange={(e) => updateExperience(index, 'startDate', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>End Date</label>
-                    <input
-                      type="month"
-                      value={exp.endDate}
-                      onChange={(e) => updateExperience(index, 'endDate', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group full-width">
-                    <label>Description</label>
-                    <textarea
-                      value={exp.description}
-                      onChange={(e) => updateExperience(index, 'description', e.target.value)}
-                      rows={3}
-                      placeholder="Describe your responsibilities and achievements..."
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addExperience} className="add-btn">
-              + Add Experience
+            <button 
+              className={currentPage === 'services' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setCurrentPage('services')}
+            >
+              خدماتنا
             </button>
-          </section>
-
-          {/* Skills */}
-          <section className="form-section">
-            <h2>🛠️ Skills</h2>
-            {cvData.skills.map((skill, index) => (
-              <div key={index} className="form-card">
-                <div className="card-header">
-                  <h3>Skill Category #{index + 1}</h3>
-                  {cvData.skills.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeSkills(index)}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Category</label>
-                    <input
-                      type="text"
-                      value={skill.category}
-                      onChange={(e) => updateSkills(index, 'category', e.target.value)}
-                      placeholder="e.g., Programming Languages, Tools, etc."
-                    />
-                  </div>
-                  <div className="form-group full-width">
-                    <label>Skills</label>
-                    <textarea
-                      value={skill.skills}
-                      onChange={(e) => updateSkills(index, 'skills', e.target.value)}
-                      rows={2}
-                      placeholder="e.g., JavaScript, React, Node.js, Git..."
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addSkills} className="add-btn">
-              + Add Skill Category
+            <button 
+              className={currentPage === 'portfolio' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setCurrentPage('portfolio')}
+            >
+              أعمالنا
             </button>
-          </section>
-
-          {/* Projects */}
-          <section className="form-section">
-            <h2>🚀 Projects</h2>
-            {cvData.projects.map((project, index) => (
-              <div key={index} className="form-card">
-                <div className="card-header">
-                  <h3>Project #{index + 1}</h3>
-                  {cvData.projects.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeProject(index)}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Project Name</label>
-                    <input
-                      type="text"
-                      value={project.name}
-                      onChange={(e) => updateProjects(index, 'name', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Technologies</label>
-                    <input
-                      type="text"
-                      value={project.technologies}
-                      onChange={(e) => updateProjects(index, 'technologies', e.target.value)}
-                      placeholder="e.g., React, Node.js, MongoDB"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Project Link</label>
-                    <input
-                      type="url"
-                      value={project.link}
-                      onChange={(e) => updateProjects(index, 'link', e.target.value)}
-                      placeholder="https://..."
-                    />
-                  </div>
-                  <div className="form-group full-width">
-                    <label>Description</label>
-                    <textarea
-                      value={project.description}
-                      onChange={(e) => updateProjects(index, 'description', e.target.value)}
-                      rows={3}
-                      placeholder="Describe the project, your role, and key features..."
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addProject} className="add-btn">
-              + Add Project
+            <button 
+              className={currentPage === 'about' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setCurrentPage('about')}
+            >
+              من نحن
             </button>
-          </section>
-
-          {/* Languages */}
-          <section className="form-section">
-            <h2>🌍 Languages</h2>
-            {cvData.languages.map((lang, index) => (
-              <div key={index} className="form-card">
-                <div className="card-header">
-                  <h3>Language #{index + 1}</h3>
-                  {cvData.languages.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeLanguage(index)}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>Language</label>
-                    <input
-                      type="text"
-                      value={lang.language}
-                      onChange={(e) => updateLanguages(index, 'language', e.target.value)}
-                      placeholder="e.g., English, Spanish, French"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Proficiency</label>
-                    <select
-                      value={lang.proficiency}
-                      onChange={(e) => updateLanguages(index, 'proficiency', e.target.value)}
-                    >
-                      <option value="">Select proficiency</option>
-                      <option value="Native">Native</option>
-                      <option value="Fluent">Fluent</option>
-                      <option value="Advanced">Advanced</option>
-                      <option value="Intermediate">Intermediate</option>
-                      <option value="Basic">Basic</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addLanguage} className="add-btn">
-              + Add Language
+            <button 
+              className={currentPage === 'contact' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setCurrentPage('contact')}
+            >
+              تواصل معنا
             </button>
-          </section>
+          </div>
+        </div>
+      </nav>
 
-          {/* Submit Buttons */}
-          <section className="form-section">
-            <div className="button-group">
-              <button type="submit" className="submit-btn">
-                💾 Save CV Data
-              </button>
-              <button type="button" onClick={generatePDF} className="pdf-btn">
-                📄 Generate PDF
-              </button>
-            </div>
-          </section>
-        </form>
+      <main className="main-content">
+        {currentPage === 'home' && renderHomePage()}
+        {currentPage === 'services' && renderServicesPage()}
+        {currentPage === 'portfolio' && renderPortfolioPage()}
+        {currentPage === 'about' && renderAboutPage()}
+        {currentPage === 'contact' && renderContactPage()}
       </main>
+
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <h3>تكنو بلس</h3>
+            <p>شركة تطوير البرمجيات الحديثة</p>
+            <p>نحول أفكارك إلى حلول رقمية مبتكرة</p>
+          </div>
+          <div className="footer-section">
+            <h3>خدماتنا</h3>
+            <ul>
+              <li>تطوير المواقع</li>
+              <li>تطبيقات الموبايل</li>
+              <li>لوحات التحكم</li>
+              <li>حلول الأعمال</li>
+            </ul>
+          </div>
+          <div className="footer-section">
+            <h3>تواصل معنا</h3>
+            <p>📧 info@technoplus.com</p>
+            <p>📱 +966 50 123 4567</p>
+            <p>📍 الرياض، السعودية</p>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>&copy; 2024 تكنو بلس. جميع الحقوق محفوظة.</p>
+        </div>
+      </footer>
     </div>
   );
 }
