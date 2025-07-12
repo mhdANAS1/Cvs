@@ -1,31 +1,38 @@
 /* CSS Variables for theming */
+.logo-img {
+  height: 40px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #1e40af;
-  --accent-color: #3b82f6;
-  --text-color: #1f2937;
-  --text-light: #6b7280;
+  --primary-color: #2196f3;
+  --secondary-color: #1976d2;
+  --accent-color: #21cbf3;
+  --text-color: #1a237e;
+  --text-light: #607d8b;
   --bg-color: #ffffff;
-  --bg-secondary: #f9fafb;
-  --border-color: #e5e7eb;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-alt: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --bg-secondary: #f5f7fa;
+  --border-color: #e3eafc;
+  --shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(33, 150, 243, 0.12);
+  --gradient: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  --gradient-alt: linear-gradient(135deg, #21cbf3 0%, #1976d2 100%);
 }
 
 /* Dark mode variables */
 .dark-mode {
-  --primary-color: #3b82f6;
-  --secondary-color: #60a5fa;
-  --accent-color: #93c5fd;
-  --text-color: #f9fafb;
-  --text-light: #d1d5db;
-  --bg-color: #111827;
-  --bg-secondary: #1f2937;
-  --border-color: #374151;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  --primary-color: #21cbf3;
+  --secondary-color: #1976d2;
+  --accent-color: #2196f3;
+  --text-color: #e3eafc;
+  --text-light: #b0bec5;
+  --bg-color: #0a1929;
+  --bg-secondary: #1a237e;
+  --border-color: #1976d2;
+  --shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.18);
+  --shadow-lg: 0 10px 15px -3px rgba(33, 150, 243, 0.22);
 }
 
 /* RTL Support */
@@ -1032,19 +1039,54 @@ body[dir="rtl"] {
 }
 
 /* Animation classes */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.fade-in {
-  animation: fadeIn 0.6s ease-out;
+.fade-in-up { animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) both; }
+.scale-in { animation: scaleIn 0.5s cubic-bezier(.23,1.01,.32,1) both; }
+.fade-in { animation: fadeIn 1s ease both; }
+
+/* Apply to sections and cards */
+.hero-section, .features-section, .stats-section, .page-header, .about-content, .contact-content, .dashboard-content {
+  animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) both;
+}
+.feature-card, .service-card, .project-card, .team-member, .message-card {
+  animation: scaleIn 0.5s cubic-bezier(.23,1.01,.32,1) both;
+}
+
+/* Button hover improvements */
+.primary-btn, .secondary-btn, .service-btn, .submit-btn, .action-btn {
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+}
+.primary-btn:hover, .service-btn:hover, .submit-btn:hover {
+  box-shadow: 0 6px 18px rgba(33,150,243,0.18);
+  transform: translateY(-3px) scale(1.04);
+}
+.secondary-btn:hover {
+  box-shadow: 0 6px 18px rgba(33,150,243,0.10);
+  transform: translateY(-2px) scale(1.03);
+}
+.action-btn:hover {
+  box-shadow: 0 4px 12px rgba(33,150,243,0.12);
+  transform: scale(1.07);
+}
+
+/* Card hover pop effect */
+.feature-card:hover, .service-card:hover, .project-card:hover, .team-member:hover, .message-card:hover {
+  box-shadow: 0 12px 32px rgba(33,150,243,0.18);
+  transform: translateY(-6px) scale(1.03);
+  z-index: 2;
 }
 
 /* Smooth transitions for theme switching */
